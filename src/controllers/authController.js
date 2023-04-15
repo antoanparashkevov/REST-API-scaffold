@@ -3,6 +3,7 @@ import express from 'express';
 import { validationResult } from "express-validator";
 import { login, logout, register } from "../services/authService.js";
 import parseError from "../utils/parseError.js";
+import { isGuest } from "../middlewares/guards.js";
 
 const router = express.Router()
 
@@ -35,11 +36,11 @@ async function authAction(req, res, action, httpErrorStatus) {
     }
 }
 
-router.post('/login', async(req, res) => {
+router.post('/login', isGuest(), async(req, res) => {
     await authAction(req, res, 'login', 400)
 })
 
-router.post('/register', async (req, res) => {
+router.post('/register', isGuest(), async (req, res) => {
     await authAction(req, res, 'register', 400)
 })
 
