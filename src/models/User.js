@@ -1,6 +1,6 @@
 import Types, { Schema, model } from "mongoose";
 
-const EMAIL_PATTERN = /^(?<username>[A-Za-z]+).*@(?<domain>[A-Za-z]+)\.(?<extension>[A-Za-z]+)$/ig
+const EMAIL_PATTERN = /^(?<username>[A-Za-z]+)@(?<domain>[A-Za-z]+)\.(?<extension>[A-Za-z]+)$/i
 
 const userSchema = new Schema({
     username: {
@@ -29,21 +29,18 @@ const userSchema = new Schema({
         type : [ String ],
         default: ['user'],
         required: true
-    },
-    created_at: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    updated_at: {
-        type: Date
     }
-})
-
-//it is executed when a document is saved.
-userSchema.pre('save', (next) => {
-    this.updated_at = Date.now();
-    next();
+}, {
+    /*
+    * special option. 
+    * Mongoose will add two properties of type Date to this schema
+    * 1. createdAt: a date representing when this document was created
+    * 2. updatedAt: a date representing when this document was last updated
+    * */
+    timestamps: { 
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    }
 })
 
 userSchema.index({ username: 1 }, {

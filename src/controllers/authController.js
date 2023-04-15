@@ -9,7 +9,7 @@ const router = express.Router()
 
 async function authAction(req, res, action, httpErrorStatus) {
     const formData = req.body;
-
+    console.log('formData', formData)
     try {
         const { errors } = validationResult(req)
 

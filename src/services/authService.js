@@ -25,7 +25,7 @@ export async function register(username, email, password) {
         throw new Error('Email is taken!')
     }
     
-    const hashedPassword = await bcrypt.hash(password, process.env['SALT'])
+    const hashedPassword = await bcrypt.hash(password, Number(process.env['SALT']))
     
     const user = await User.create({
         username,
