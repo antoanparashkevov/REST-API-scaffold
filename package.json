@@ -2,13 +2,14 @@
   "name": "rest-api-scaffold",
   "version": "1.0.0",
   "description": "REST API",
+  "type": "module",
   "main": "server.js",
   "engines": {
     "node": "18.x"
   },
   "scripts": {
-    "start:development": "nodemon server.js",
-    "start:production": "node server.js"
+    "start:development": "nodemon src/server.js",
+    "start:production": "node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +20,17 @@
   "bugs": {
     "url": "https://github.com/antoanparashkevov/REST-API-scaffold/issues"
   },
-  "homepage": "https://github.com/antoanparashkevov/REST-API-scaffold#readme"
+  "homepage": "https://github.com/antoanparashkevov/REST-API-scaffold#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.22"
+  }
 }
