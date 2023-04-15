@@ -1,3 +1,5 @@
+import express from "express";
+
 import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser';
 
@@ -9,4 +11,5 @@ export default function() {
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+    app.use('/uploads', express.static('uploads'))
 }
