@@ -1,6 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
+
+//configurations
 import expressConfiguration from "./config/express-configuration.js";
+import routes from "./routes/routes.js";
 
 dotenv.config();
 
@@ -8,12 +11,7 @@ const app = express();
 
 expressConfiguration(app);
 
-
-app.get('/', (req,res) => {
-    res.json({
-        message: 'REST Service operational...'
-    })
-})
+app.use(routes);
 
 
 
