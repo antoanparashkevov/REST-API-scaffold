@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 //model
 import User from "../models/User.js";
-import user from "../models/User.js";
 
 export async function register(username, email, password) {
     const existingUsername = await User.findOne({username : username})
@@ -76,4 +75,10 @@ function createToken({ username, email, _id, roles }) {
         accessToken: token
     }
     
+}
+
+let tokenBlackList = new Set();
+
+export function logout(token) {
+    tokenBlackList.add(token);
 }
