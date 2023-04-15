@@ -2,7 +2,7 @@ import { parseToken } from "../services/authService.js";
 
 export default function() {
     return (req,res,next) => {
-        const token = req.headers('x-authorization');
+        const token = req.headers['x-authorization'];
         
         if( token ) {
             try {
