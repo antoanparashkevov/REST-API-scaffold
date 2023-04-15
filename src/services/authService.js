@@ -77,6 +77,15 @@ function createToken({ username, email, _id, roles }) {
     
 }
 
+export function parseToken(token) {
+    
+    if(tokenBlackList.has(token)) {
+        throw new Error('The token is blacklisted!');
+    }
+    
+    return jwt.verify(token, process.env['JWT_SECRET'])
+}
+
 let tokenBlackList = new Set();
 
 export function logout(token) {

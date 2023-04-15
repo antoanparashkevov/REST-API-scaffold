@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser';
 
 import { app } from "../server.js";
+import session from "../middlewares/session.js";
 
 export default function() {
     app.use(cookieParser());
@@ -11,5 +12,6 @@ export default function() {
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+    app.use(session());
     app.use('/uploads', express.static('uploads'))//test here -> http://localhost:3000/uploads/rest-api.png
 }
