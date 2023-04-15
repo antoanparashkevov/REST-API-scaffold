@@ -5,8 +5,11 @@ import cookieParser from 'cookie-parser';
 
 import { app } from "../server.js";
 import session from "../middlewares/session.js";
+import cors from "../middlewares/cors.js";
 
 export default function() {
+    
+    app.use(cors());
     app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
