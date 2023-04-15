@@ -4,8 +4,11 @@ import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser';
 
 import { app } from "../server.js";
+
+//middlewares
 import session from "../middlewares/session.js";
 import cors from "../middlewares/cors.js";
+import trimBody from "../middlewares/trimBody.js";
 
 export default function() {
     
@@ -15,6 +18,7 @@ export default function() {
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+    app.use(trimBody());
     app.use(session());
     app.use('/uploads', express.static('uploads'))//test here -> http://localhost:3000/uploads/rest-api.png
 }
