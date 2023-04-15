@@ -1,0 +1,23 @@
+{
+  "name": "rest-api-scaffold",
+  "version": "1.0.0",
+  "description": "REST API",
+  "main": "server.js",
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "start:development": "nodemon server.js",
+    "start:production": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antoanparashkevov/REST-API-scaffold.git"
+  },
+  "author": "Antoan Parashkevov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antoanparashkevov/REST-API-scaffold/issues"
+  },
+  "homepage": "https://github.com/antoanparashkevov/REST-API-scaffold#readme"
+}
