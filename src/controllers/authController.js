@@ -1,9 +1,10 @@
 import express from 'express';
 
-import { validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import { login, logout, register } from "../services/authService.js";
 import parseError from "../utils/parseError.js";
 import { isGuest } from "../middlewares/guards.js";
+import randomNumber from "../utils/randomNumber.js";
 
 const router = express.Router()
 
@@ -12,16 +13,18 @@ async function authAction(req, res, action, httpErrorStatus) {
     console.log('formData', formData)
     try {
         const { errors } = validationResult(req)
-
+        
         if( errors.length > 0 ) {
             throw errors;
         }
+        
+        let otp = randomNumber(4);
 
         let data;
         if( action === 'login' ) {
-            data = await login(formData.email, formData.password)
+            data = await login(formData.email, formData.password, otp)
         } else if( action === 'register' ) {
-            data = await register(formData.username, formData.email, formData.password)
+            data = await register(formData.username, formData.email, formData.password, otp)
         }
 
         res.json(data);
@@ -36,7 +39,20 @@ async function authAction(req, res, action, httpErrorStatus) {
     }
 }
 
-router.post('/login', isGuest(), async(req, res) => {
+router.post('/login',
+    isGuest(),
+    body('email')
+        .isEmpty()
+        .withMessage('Email must not be empty!')
+        .bail()
+        .isEmpty()
+        .withMessage('Email must be valid!')
+        .isAlphanumeric()
+        .withMessage('Email should contain only english letters and digits!')
+        .bail()
+        .isLength({ min: 6 })
+        .withMessage('Email must be at least 6 characters long!'),
+    async(req, res) => {
     await authAction(req, res, 'login', 400)
 })
 

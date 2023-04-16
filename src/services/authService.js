@@ -3,8 +3,9 @@ import jwt from 'jsonwebtoken';
 
 //model
 import User from "../models/User.js";
+import mailer from "../utils/mailer.js";
 
-export async function register(username, email, password) {
+export async function register(username, email, password, otp) {
     const existingUsername = await User.findOne({username : username})
         .collation({
             locale: 'en',
@@ -27,17 +28,32 @@ export async function register(username, email, password) {
     
     const hashedPassword = await bcrypt.hash(password, Number(process.env['SALT']))
     
-    const user = await User.create({
+    const user = new User({
         username,
         email,
-        hashedPassword
+        hashedPassword,
+        confirmOtp: otp,
+    })
+    
+    let emailHtml = '<p>Please confirm your account.</p><p>OTP: '+ otp +'</p>'
+    
+    mailer(
+        process.env['EMAIL_SMTP_USERNAME'],
+        email,
+        'Confirm account',
+        emailHtml
+    ).then(() => {
+        user.save()
+    }).catch(err => {
+        console.log('error from mailer', err);
+        throw err;
     })
     
     return createToken(user)
     
 }
 
-export async function login(email, password) {
+export async function login(email, password, otp) {
     const existingEmail = await User.findOne({email : email})
         .collation({
             locale: 'en',

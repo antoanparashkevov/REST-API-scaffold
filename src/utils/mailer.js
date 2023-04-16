@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import smtpTransport from "nodemailer-smtp-transport";
 
+//SMTP - Simple Mail Transfer Protocol is an internet standard communication protocol for mail transmission
 
 let transporter = nodemailer.createTransport(smtpTransport({
     service: process.env['EMAIL_SMTP_SERVICE'],
