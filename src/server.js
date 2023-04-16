@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
 
 //configurations
 import expressConfiguration from "./config/express-config.js";
@@ -11,7 +12,6 @@ import useDefaultRoute from "./routes/default-routes.js";
 
 
 export const app = express();
-dotenv.config();
 
 expressConfiguration();
 databaseConfig()

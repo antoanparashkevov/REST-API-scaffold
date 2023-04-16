@@ -33,8 +33,8 @@ const userSchema = new Schema({
     isConfirmed: {
         type: Boolean,
         required: true,
-        default: 0}
-    ,
+        default: 0//meaning false
+    },
     confirmOTP: {
         type: String,
         required:false
