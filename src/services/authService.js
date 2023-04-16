@@ -53,7 +53,7 @@ export async function register(username, email, password, otp) {
     
 }
 
-export async function login(email, password, otp) {
+export async function login(email, password) {
     const existingEmail = await User.findOne({email : email})
         .collation({
             locale: 'en',
@@ -69,8 +69,16 @@ export async function login(email, password, otp) {
     if( !matchPassword ) {
         throw new Error('Incorrect email or password!')
     }
+
+    if( existingEmail.isConfirmed ) {
+        return createToken(existingEmail)
+    } else {
+        throw new Error('Account is not active! Please contact admin!')
+    }
     
-    return createToken(existingEmail)
+}
+
+export async function verifyConfirm() {
     
 }
 
