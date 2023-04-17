@@ -5,7 +5,7 @@
     "commonjs": true,
     "mongo": true
   },
-  "extends": "eslint:reccomended",
+  "extends": "eslint:recommended",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
