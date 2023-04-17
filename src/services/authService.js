@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 //model
 import User from "../models/User.js";
 import mailer from "../utils/mailer.js";
+import randomNumber from "../utils/randomNumber.js";
 
 export async function register(username, email, password, otp) {
     const existingUsername = await User.findOne({username : username})
@@ -79,7 +80,12 @@ export async function login(email, password) {
 }
 
 export async function verifyConfirm(email, otp) {
-    let existingEmail  = await User.findOne(email)
+    let existingEmail  = await User.findOne({email : email})
+        .collation({
+            locale: 'en',
+            strength: 2//case insensitive
+        })
+    console.log('existingEmail', existingEmail)
     
     if ( existingEmail ) {
         
@@ -87,10 +93,15 @@ export async function verifyConfirm(email, otp) {
             
             if( existingEmail.confirmOTP === otp ) {
                 
-               await User.findOneAndUpdate(email, {
-                    isConfirmed: 1,
-                    confirmOTP: null
-               })
+               // await User.findOneAndUpdate(email, {
+               //      isConfirmed: 1,
+               //      confirmOTP: null
+               // })
+                
+                existingEmail.isConfirmed = 1;//true
+                existingEmail.confirmOTP = null;//clear
+                
+                await existingEmail.save();
                
                return createToken(existingEmail); 
                 
@@ -107,12 +118,54 @@ export async function verifyConfirm(email, otp) {
     }
 }
 
-function createToken({ username, email, _id, roles }) {
+export async function resendVerify(email) {
+    let existingEmail = await User.findOne({email : email})
+        .collation({
+            locale: 'en',
+            strength: 2//case insensitive
+        })
+    console.log('existingEmail', existingEmail)
+    
+    if( existingEmail ) {
+        
+        if( !existingEmail.isConfirmed ) {
+            let otp = randomNumber(4);
+
+            let emailHtml = '<p>Please confirm your account.</p><p>OTP: '+ otp +'</p>'
+
+            mailer(
+                process.env['EMAIL_SMTP_USERNAME'],
+                email,
+                'Confirm account',
+                emailHtml
+            ).then(() => {
+                existingEmail.isConfirmed = 0;//false
+                existingEmail.confirmOTP = otp;//other otp
+                existingEmail.save()
+            }).catch(err => {
+                console.log('error from mailer', err);
+                throw err;
+            })
+        } else {
+            throw new Error('This account is already confirmed!')
+        }
+        
+    } else {
+        throw new Error('This account does not exist!')
+    }
+    
+    return createToken(existingEmail);
+    
+}
+
+function createToken({ username, email, _id, roles, isConfirmed, status }) {
     const payload = {
         username,
         email,
         _id,
-        roles
+        roles,
+        isConfirmed,
+        status
     }
     
     const token = jwt.sign(payload, process.env['JWT_SECRET'],{

@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { body, validationResult } from "express-validator";
-import { login, logout, register, verifyConfirm } from "../services/authService.js";
+import { login, logout, register, resendVerify, verifyConfirm } from "../services/authService.js";
 import parseError from "../utils/parseError.js";
 import { isGuest } from "../middlewares/guards.js";
 import randomNumber from "../utils/randomNumber.js";
@@ -28,6 +28,8 @@ async function authAction(req, res, action, httpErrorStatus) {
             data = await register(formData.username, formData.email, formData.password, otp)
         } else if( action === 'verify' ) {
             data = await verifyConfirm(formData.email, formData.otp)
+        } else if( action === 'resend-verify' ) {
+            data = await resendVerify(formData.email)
         }
 
         res.json(data);
@@ -50,8 +52,6 @@ router.post('/login',
         .bail()
         .isEmail()
         .withMessage('Please enter a valid email address!')
-        .isAlphanumeric()
-        .withMessage('Email should contain only english letters and digits!')
         .bail()
         .isLength({ min: 6 })
         .withMessage('Email must be at least 6 characters long!'),
@@ -99,15 +99,12 @@ router.get('/logout', async (req, res) => {
 })
 
 router.post('/verify-otp',
-    isGuest(),
     body('email')
         .notEmpty()
         .withMessage('Email should be specified')
         .bail()
         .isEmail()
         .withMessage('Please enter a valid email address!')
-        .isAlphanumeric()
-        .withMessage('Email should contain only english letters and digits!')
         .bail()
         .isLength({ min: 6 })
         .withMessage('Email must be at least 6 characters long!'),
@@ -117,6 +114,20 @@ router.post('/verify-otp',
     
     async (req, res) => {
     await authAction(req, res, 'verify', 403)
+})
+
+router.post('/resend-verify-otp',
+    body('email')
+        .notEmpty()
+        .withMessage('Email should be specified')
+        .bail()
+        .isEmail()
+        .withMessage('Please enter a valid email address!')
+        .bail()
+        .isLength({ min: 6 })
+        .withMessage('Email must be at least 6 characters long!'),
+    async (req, res) => {
+    await authAction(req, res, 'resend-verify', 403)
 })
 
 

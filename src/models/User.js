@@ -42,12 +42,12 @@ const userSchema = new Schema({
     otpTries: {
         type: Number,
         required: false,
-        default: 0
+        default: 0//meaning false
     },
     status: {
         type: Boolean,
         required: true,
-        default: 1
+        default: 1//meaning true
     }
 }, {
     

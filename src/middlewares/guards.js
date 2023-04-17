@@ -2,7 +2,7 @@ export const hasUser = () => {
     
     return (req, res, next) => {
         
-        if( req.user ) {
+        if( req.user && req.user.isConfirmed ) {
             next();
         } else {
             //401 - unauthorized
@@ -17,7 +17,7 @@ export const isGuest = () => {
     
     return (req, res, next) => {
         
-        if( !req.user ) {
+        if( !req.user || req.user && !req.user.isConfirmed ) {
             next();
         } else {
             //400 - bad request
