@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { body, validationResult } from "express-validator";
-import { login, logout, register } from "../services/authService.js";
+import { login, logout, register, verifyConfirm } from "../services/authService.js";
 import parseError from "../utils/parseError.js";
 import { isGuest } from "../middlewares/guards.js";
 import randomNumber from "../utils/randomNumber.js";
@@ -11,6 +11,7 @@ const router = express.Router()
 async function authAction(req, res, action, httpErrorStatus) {
     const formData = req.body;
     console.log('formData', formData)
+    
     try {
         const { errors } = validationResult(req)
         
@@ -18,13 +19,15 @@ async function authAction(req, res, action, httpErrorStatus) {
             throw errors;
         }
         
-        let otp = randomNumber(4);
-
         let data;
+        
         if( action === 'login' ) {
             data = await login(formData.email, formData.password)
         } else if( action === 'register' ) {
+            let otp = randomNumber(4);
             data = await register(formData.username, formData.email, formData.password, otp)
+        } else if( action === 'verify' ) {
+            data = await verifyConfirm(formData.email, formData.otp)
         }
 
         res.json(data);
@@ -42,7 +45,7 @@ async function authAction(req, res, action, httpErrorStatus) {
 router.post('/login',
     isGuest(),
     body('email')
-        .isEmpty()
+        .notEmpty()
         .withMessage('Email should be specified')
         .bail()
         .isEmail()
@@ -62,20 +65,17 @@ router.post('/login',
 router.post('/register', 
     isGuest(),
     body('username')
-        .isEmpty()
+        .notEmpty()
         .withMessage('Username should be specified!')
         .bail()
         .isLength({min: 5})
         .withMessage('Username must be at least 5 characters long!'),
     body('email')
-        .isEmpty()
+        .notEmpty()
         .withMessage('Email should be specified')
         .bail()
         .isEmail()
         .withMessage('Please enter a valid email address!')
-        .isAlphanumeric()
-        .withMessage('Email should contain only english letters and digits!')
-        .bail()
         .isLength({ min: 6 })
         .withMessage('Email must be at least 6 characters long!'),
     body('password')
@@ -101,7 +101,7 @@ router.get('/logout', async (req, res) => {
 router.post('/verify-otp',
     isGuest(),
     body('email')
-        .isEmpty()
+        .notEmpty()
         .withMessage('Email should be specified')
         .bail()
         .isEmail()
@@ -116,7 +116,7 @@ router.post('/verify-otp',
         .withMessage('OTP must be specified!'),
     
     async (req, res) => {
-    
+    await authAction(req, res, 'verify', 403)
 })
 
 

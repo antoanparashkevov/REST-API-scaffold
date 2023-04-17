@@ -37,11 +37,11 @@ const userSchema = new Schema({
     },
     confirmOTP: {
         type: String,
-        required:false
+        required: false
     },
     otpTries: {
         type: Number,
-        required:false,
+        required: false,
         default: 0
     },
     status: {
@@ -50,6 +50,7 @@ const userSchema = new Schema({
         default: 1
     }
 }, {
+    
     /*
     * special option. 
     * Mongoose will add two properties of type Date to this schema

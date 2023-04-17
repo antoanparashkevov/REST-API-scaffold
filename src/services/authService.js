@@ -32,7 +32,7 @@ export async function register(username, email, password, otp) {
         username,
         email,
         hashedPassword,
-        confirmOtp: otp,
+        confirmOTP: otp,
     })
     
     let emailHtml = '<p>Please confirm your account.</p><p>OTP: '+ otp +'</p>'
@@ -78,8 +78,33 @@ export async function login(email, password) {
     
 }
 
-export async function verifyConfirm() {
+export async function verifyConfirm(email, otp) {
+    let existingEmail  = await User.findOne(email)
     
+    if ( existingEmail ) {
+        
+        if( !existingEmail.isConfirmed ) {
+            
+            if( existingEmail.confirmOTP === otp ) {
+                
+               await User.findOneAndUpdate(email, {
+                    isConfirmed: 1,
+                    confirmOTP: null
+               })
+               
+               return createToken(existingEmail); 
+                
+            } else {
+                throw new Error('One-time password does not match!')
+            }
+            
+        } else {
+            throw new Error('This account is already confirmed!')
+        }
+        
+    } else {
+        throw new Error('This account does not exist!')
+    }
 }
 
 function createToken({ username, email, _id, roles }) {
