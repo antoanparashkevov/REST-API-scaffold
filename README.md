@@ -1,6 +1,6 @@
 # Nodejs Expressjs MongoDB Ready-to-use API Project Structure
 
-[![Author](https://img.shields.io/badge/author-%40antoanparashkevov-green)](https://www.linkedin.com/in/antoanp/) [![GitHub license](https://img.shields.io/badge/licence-MIT-yellow)]() ![GitHub repo size](https://img.shields.io/github/repo-size/antoanparashkevov/REST-API-scaffold)
+[![Author](https://img.shields.io/badge/author-%40antoanparashkevov-green)](https://www.linkedin.com/in/antoanp/) [![GitHub license](https://img.shields.io/badge/licence-MIT-yellow)](https://github.com/antoanparashkevov/REST-API-scaffold/blob/main/LICENSE) ![GitHub repo size](https://img.shields.io/github/repo-size/antoanparashkevov/REST-API-scaffold)
 
 A ready-to-use boilerplate for REST API Development with Node.js, Express, and MongoDB and mongoose
 
