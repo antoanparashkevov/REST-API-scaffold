@@ -132,6 +132,7 @@ dist
 
 #IDE
 .idea
+.DS_Store
 
 #Uploads
 uploads
